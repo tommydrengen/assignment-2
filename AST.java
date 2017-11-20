@@ -17,7 +17,6 @@ abstract class AST{
 
 class Start extends AST{
     public static List<String> tokens = new ArrayList<>();
-
     public List<TokenDef> tokendefs;
     public List<DataTypeDef> datatypedefs;
     Start(List<TokenDef> tokendefs, List<DataTypeDef> datatypedefs){
@@ -82,10 +81,11 @@ class Alternative extends AST{
     @Override
     public String codegen(String dataTypeName){
         String res = "class " + constructor + " extends " + dataTypeName + "{ \n" ;
-            String arg = "";
-            String conBody = "";
-            String toString = "";
+            String space = "    ";
+            String out = "";
             //System.out.println(Start.tokens);
+
+            System.out.println("this."+dataTypeName);
 
             for(Argument argument:arguments){
                 String temp = "";
@@ -94,14 +94,31 @@ class Alternative extends AST{
                 } else {
                     temp = argument.type;
                 }
-                res += "public " + temp + " " + argument.name + ";\n";
-                arg += temp + " " + argument.name +", ";
-                conBody += "this." + argument.name + "="+ argument.name + ";\n";
-                toString += "public String toString( " + "e1 " + "+ " + "e2" + ")\n";
 
+
+                }
+
+                
+
+
+
+                out += space +"public "+ constructor + " (";
+            for(Argument  argument:arguments){
+                out += argument.type + " " + argument.name + ", ";
+            }
+            out = out.substring(0, out.length() - 2);
+            out += ")  {\n";
+            for(Argument argument:arguments){
+                out += space + "this." + argument.name + " = " + argument.name + ";\n";
             }
 
-            return  res + "\npublic "+constructor+ "("+ arg+"){\n" + conBody +  "}\n"+"}\n";
+
+
+            for(Token token: tokens){
+                token.stringify();
+                //System.out.println("test");
+            }
+            return  "\n" + res + out +  "}\n";
 
     }
 
@@ -110,7 +127,10 @@ class Alternative extends AST{
 class Argument extends AST{
     public String type; // "NUM"  -> "String"
     public String name; // "v"
-    Argument(String type, String name){this.type=type; this.name=name;}
+    Argument(String type, String name){
+        this.type=type;
+        this.name=name;
+    }
     public String codegen(String dataTypeName){
 
 
@@ -119,23 +139,39 @@ return "";
     }
 }
 
-abstract class Token extends AST{}
+abstract class Token extends AST{
+    abstract String stringify();
+}
 
 class Nonterminal extends Token{
     public String name;
-    Nonterminal(String name){this.name=name;}
+    Nonterminal(String name){
+        this.name=name;
+    }
     public String codegen(String dataTypeName){
         return "";
+}
 
-
+    @Override
+    public String stringify() {
+        return name;
     }
 }
 
 class Terminal extends Token{
     public String token;
-    Terminal(String token){this.token=token;}
+    Terminal(String token){
+        this.token=token;
+        this.stringify();
+    }
     public String codegen(String x){
+
         return "";
+    }
+
+    @Override
+    public String stringify() {
+        return token;
     }
 }
 
