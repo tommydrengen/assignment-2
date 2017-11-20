@@ -80,7 +80,7 @@ class Alternative extends AST{
 
     @Override
     public String codegen(String dataTypeName){
-        String res = "class " + constructor + " extends " + dataTypeName + "{ \n" ;
+        String res = "class " + constructor + " extends " + dataTypeName + "{ " ;
             String space = "    ";
             String out = "";
             //System.out.println(Start.tokens);
@@ -98,27 +98,31 @@ class Alternative extends AST{
 
                 }
 
-                
 
-
-
-                out += space +"public "+ constructor + " (";
+            out += space+"\n    public expression e1;\n    public expression e2;\n    " + constructor + " (";
             for(Argument  argument:arguments){
                 out += argument.type + " " + argument.name + ", ";
             }
             out = out.substring(0, out.length() - 2);
-            out += ")  {\n";
+            out += ")  {\n    ";
             for(Argument argument:arguments){
-                out += space + "this." + argument.name + " = " + argument.name + ";\n";
+                out += space + "this." + argument.name + " = " + argument.name + ";\n    ";
+
+
             }
 
 
-
+            String toStringMetode = "\n\t" + "public String toString() {" + "\n\t\t" + "\"\"";
             for(Token token: tokens){
-                token.stringify();
-                //System.out.println("test");
+                toStringMetode += " + " + token.stringify();
+
             }
-            return  "\n" + res + out +  "}\n";
+            toStringMetode += ";" + "\n";
+            toStringMetode += "}\n";
+            //String afslut = ;
+            System.out.println(toStringMetode);
+            
+            return  "\n" + res + out +  toStringMetode + "}\n";
 
     }
 
