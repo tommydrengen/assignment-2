@@ -85,7 +85,7 @@ class Alternative extends AST{
             String out = "";
             //System.out.println(Start.tokens);
 
-            System.out.println("this."+dataTypeName);
+           // System.out.println("t+dataTypeName);
 
             for(Argument argument:arguments){
                 String temp = "";
@@ -106,21 +106,21 @@ class Alternative extends AST{
             out = out.substring(0, out.length() - 2);
             out += ")  {\n    ";
             for(Argument argument:arguments){
-                out += space + "this." + argument.name + " = " + argument.name + ";\n    ";
+                //out += space + "this." + argument.name + " = " + argument.name + ";\n    ";
 
 
             }
 
 
-            String toStringMetode = "\n\t" + "public String toString() {" + "\n\t\t" + "\"\"";
+            String toStringMetode = "\n\t" + "public String toString() {" + "\n\t\t return " + "\"\"";
             for(Token token: tokens){
                 toStringMetode += " + " + token.stringify();
 
             }
             toStringMetode += ";" + "\n";
             toStringMetode += "}\n";
-            //String afslut = ;
-            System.out.println(toStringMetode);
+
+       
             
             return  "\n" + res + out +  toStringMetode + "}\n";
 
@@ -170,12 +170,12 @@ class Terminal extends Token{
     }
     public String codegen(String x){
 
-        return "";
+        return token.replace('\'','\"') ; //forstår ik helt hvorforr den ik virker
     }
 
     @Override
     public String stringify() {
-        return token;
+        return token.replace("\'", "\"");
     }
 }
 
